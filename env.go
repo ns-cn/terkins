@@ -18,11 +18,11 @@ var (
 	envEncrypted = ""
 	envDebug     = ""
 
-	flagHost    = goter.CmdStringFlag{P: &envHost, Name: "envHost", Shorthand: "H", Value: "", Usage: "envHost of jenkins, can use ENV TERKINS_HOST instead"}
-	flagUser    = goter.CmdStringFlag{P: &envUser, Name: "envUser", Shorthand: "U", Value: "", Usage: "envUser of jenkins, can use ENV TERKINS_USER instead"}
-	flagPass    = goter.CmdStringFlag{P: &envPass, Name: "password", Shorthand: "P", Value: "", Usage: "password of jenkins, can use ENV TERKINS_PASS instead"}
-	flagEncrypt = goter.CmdStringFlag{P: &envEncrypted, Name: "envEncrypted", Shorthand: "E", Value: "", Usage: "password envEncrypted: Y/N , can use TERKINS_ENCRYPTED instead"}
-	flagDebug   = goter.CmdStringFlag{P: &envDebug, Name: "envDebug", Shorthand: "D", Value: "N", Usage: "envDebug: Y/N"}
+	flagHost    = goter.CmdFlagString{P: &envHost, Name: "envHost", Shorthand: "H", Value: "", Usage: "envHost of jenkins, can use ENV TERKINS_HOST instead"}
+	flagUser    = goter.CmdFlagString{P: &envUser, Name: "envUser", Shorthand: "U", Value: "", Usage: "envUser of jenkins, can use ENV TERKINS_USER instead"}
+	flagPass    = goter.CmdFlagString{P: &envPass, Name: "password", Shorthand: "P", Value: "", Usage: "password of jenkins, can use ENV TERKINS_PASS instead"}
+	flagEncrypt = goter.CmdFlagString{P: &envEncrypted, Name: "envEncrypted", Shorthand: "E", Value: "", Usage: "password envEncrypted: Y/N , can use TERKINS_ENCRYPTED instead"}
+	flagDebug   = goter.CmdFlagString{P: &envDebug, Name: "envDebug", Shorthand: "D", Value: "N", Usage: "envDebug: Y/N"}
 
 	isEncrypted = true
 	// env from system
@@ -35,5 +35,5 @@ var (
 // 构建使用的参数
 var (
 	envBuildInfo    = ""
-	flagInfoToBuild = goter.CmdStringFlag{P: &envBuildInfo, Name: "info", Shorthand: "I", Value: "Y", Usage: "info each job to build or not"}
+	flagInfoToBuild = goter.CmdFlagString{P: &envBuildInfo, Name: "info", Shorthand: "I", Value: "Y", Usage: "info each job to build or not"}
 )
