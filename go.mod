@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/bndr/gojenkins v1.1.0
-	github.com/ns-cn/goter v0.0.0-20221228012845-e5c5c3656dc8
+	github.com/ns-cn/goter v0.0.0-20221229034825-cb62812d785c
 	github.com/spf13/cobra v1.6.1
 )
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/bndr/gojenkins"
-	"github.com/ns-cn/goter"
 	"os"
+	"terkins/env"
 )
 
 var session *gojenkins.Jenkins
@@ -14,10 +14,10 @@ func getSession() *gojenkins.Jenkins {
 	if session != nil {
 		return session
 	}
-	if goter.IsYes(envDebug, false) {
-		fmt.Printf("terkins://%s@%s(using password: %s)\n", envHost, envUser, envPass)
+	if env.Debug.Value {
+		fmt.Printf("terkins://%s@%s(using password: %s)\n", env.Host.Value, env.User.Value, env.Pass.Value)
 	}
-	jenkins := gojenkins.CreateJenkins(nil, envHost, envUser, envPass)
+	jenkins := gojenkins.CreateJenkins(nil, env.Host.Value, env.User.Value, env.Pass.Value)
 	_, err := jenkins.Init(context.Background())
 	if err != nil {
 		fmt.Println(err)

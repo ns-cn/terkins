@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"terkins/env"
 	"time"
 )
 
@@ -16,10 +17,10 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 	Use:   "build",
 	Short: "构建具体的任务，可选命令行流方式或参数方式",
 	Run: func(cmd *cobra.Command, args []string) {
-		ReadSetting()
-		goter.Required(envHost, func(u string) bool { return u != "" }, "run without envHost", func() { _ = cmd.Help() })
-		goter.Required(envUser, func(u string) bool { return u != "" }, "run without username", func() { _ = cmd.Help() })
-		goter.Required(envPass, func(u string) bool { return u != "" }, "run without password", func() { _ = cmd.Help() })
+		env.ReadSetting()
+		goter.Required(env.Host.Value, func(u string) bool { return u != "" }, "run without Host", func() { _ = cmd.Help() })
+		goter.Required(env.User.Value, func(u string) bool { return u != "" }, "run without username", func() { _ = cmd.Help() })
+		goter.Required(env.Pass.Value, func(u string) bool { return u != "" }, "run without password", func() { _ = cmd.Help() })
 		getSession()
 		jobsToBuild := make([]string, 0)
 		reader := bufio.NewReader(os.Stdin)
@@ -40,7 +41,7 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 		results := make(chan string, 0)
 		for _, job := range jobsToBuild {
 			toBuild := false
-			if goter.IsYes(envBuildInfo, true) {
+			if env.ShowBuildInfo.Value {
 				reader := bufio.NewReader(os.Stdin)
 				fmt.Printf("build %s(Y/N)?", job)
 				choice, _ := reader.ReadString('\n')

@@ -8,17 +8,18 @@ import (
 	"os"
 	"regexp"
 	"sync"
+	"terkins/env"
 )
 
 var CmdJob = goter.Command{Cmd: &cobra.Command{
 	Use:   "job",
 	Short: "查看当前用户的所有可用的构建任务",
 	Run: func(cmd *cobra.Command, args []string) {
-		ReadSetting()
+		env.ReadSetting()
 		getSession()
-		goter.Required(envHost, func(u string) bool { return u != "" }, "run without envHost", func() { _ = cmd.Help() })
-		goter.Required(envUser, func(u string) bool { return u != "" }, "run without username", func() { _ = cmd.Help() })
-		goter.Required(envPass, func(u string) bool { return u != "" }, "run without password", func() { _ = cmd.Help() })
+		goter.Required(env.Host.Value, func(u string) bool { return u != "" }, "run without envHost", func() { _ = cmd.Help() })
+		goter.Required(env.User.Value, func(u string) bool { return u != "" }, "run without username", func() { _ = cmd.Help() })
+		goter.Required(env.Pass.Value, func(u string) bool { return u != "" }, "run without password", func() { _ = cmd.Help() })
 		filters := make([]*regexp.Regexp, 0)
 		if len(args) > 0 {
 			for _, arg := range args {
