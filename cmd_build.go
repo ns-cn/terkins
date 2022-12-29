@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"github.com/liushuochen/gotable"
 	"github.com/ns-cn/goter"
 	"github.com/spf13/cobra"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"terkins/env"
@@ -38,7 +40,7 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 			}
 		}
 		waitGroup := sync.WaitGroup{}
-		results := make(chan string, 0)
+		chanResults := make(chan buildResult, 0)
 		for _, job := range jobsToBuild {
 			toBuild := false
 			if env.ShowBuildInfo.Value {
@@ -54,7 +56,7 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 				waitGroup.Add(1)
 				go func() {
 					defer waitGroup.Done()
-					subJobNames := strings.Split(job, "->")
+					subJobNames := strings.Split(job, ">")
 					ctx := context.Background()
 					for _, subJobName := range subJobNames {
 						if strings.HasPrefix(subJobName, "/job/") {
@@ -62,13 +64,12 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 						}
 						buildId, err := session.BuildJob(ctx, subJobName, map[string]string{})
 						if err != nil {
-							results <- fmt.Sprintf("[FAILED]: building %s with errors: %v", subJobName, err)
+							chanResults <- buildFail(subJobName, buildId, -1, err.Error())
 							return
 						}
-						fmt.Printf("new Building JOB: %s queueID: %d\n", subJobName, buildId)
 						subJob, err := session.GetJob(ctx, subJobName)
 						if err != nil {
-							results <- fmt.Sprintf("[FAILED]: building %s with errors: %v", subJobName, err)
+							chanResults <- buildFail(subJobName, buildId, -1, err.Error())
 							return
 						}
 						// 权益之计，原项目通过job获取指定队列ID的Build对象时url拼错，导致方法无法使用，暂替换成此方法
@@ -82,7 +83,7 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 							}
 						}
 						if err != nil {
-							results <- fmt.Sprintf("[FAILED]: building %s with errors: %v", subJobName, err)
+							chanResults <- buildFail(subJobName, buildId, -1, err.Error())
 							return
 						}
 						for {
@@ -92,24 +93,64 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 								break
 							}
 						}
-						results <- fmt.Sprintf("[SUCCESS]: building %s [%d] successed", subJobName, buildId)
+						chanResults <- buildSuccess(subJobName, buildId, -1)
 					}
 				}()
 			}
 		}
 		go func() {
 			waitGroup.Wait()
-			results <- "EXIT"
+			chanResults <- EXIT
 		}()
+		results := make([]buildResult, 0)
 		for {
 			select {
-			case result := <-results:
-				if result == "EXIT" {
+			case result := <-chanResults:
+				if result == EXIT {
 					goto EXIT
 				}
-				fmt.Println(result)
+				results = append(results, result)
 			}
 		}
 	EXIT:
+		table, _ := gotable.Create("模块", "构建ID", "结果", "耗时", "异常信息")
+		for _, result := range results {
+			if result.success {
+				_ = table.AddRow([]string{result.name, strconv.Itoa(int(result.buildId)), "成功", strconv.Itoa(int(result.tokeTime)), result.err})
+			} else {
+				_ = table.AddRow([]string{result.name, strconv.Itoa(int(result.buildId)), "失败", strconv.Itoa(int(result.tokeTime)), result.err})
+			}
+		}
+		fmt.Print(table.String())
 	},
 }}
+
+type buildResult struct {
+	success  bool
+	name     string
+	buildId  int64
+	tokeTime int64
+	// 失败
+	err string
+}
+
+var EXIT = buildResult{success: true, name: "EXIT", buildId: -1, tokeTime: -1}
+
+func buildSuccess(name string, buildId, tokeTime int64) buildResult {
+	return buildResult{
+		success:  true,
+		name:     name,
+		buildId:  buildId,
+		tokeTime: tokeTime,
+	}
+}
+
+func buildFail(name string, buildId, tokeTime int64, error string) buildResult {
+	return buildResult{
+		success:  false,
+		name:     name,
+		buildId:  buildId,
+		err:      error,
+		tokeTime: tokeTime,
+	}
+}
