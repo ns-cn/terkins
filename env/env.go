@@ -27,5 +27,5 @@ var (
 
 // 构建使用的参数
 var (
-	ShowBuildInfo = goter.NewCmdFlagBool(true, "info", "I", "info each job to build or not")
+	ShowBuildInfo = goter.NewCmdFlagBool(false, "info", "I", "info each job to build or not")
 )
