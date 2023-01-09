@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-var CmdBuild = goter.Command{Cmd: &cobra.Command{
+var CmdBuild = root.NewSubCommand(&cobra.Command{
 	Use:   "build",
 	Short: "构建具体的任务，可选命令行流方式或参数方式",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -123,7 +123,7 @@ var CmdBuild = goter.Command{Cmd: &cobra.Command{
 		}
 		fmt.Print(table.String())
 	},
-}}
+}, &env.Host, &env.User, &env.Pass, &env.Encrypt, &env.Debug, &env.ShowBuildInfo)
 
 type buildResult struct {
 	success  bool

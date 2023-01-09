@@ -10,7 +10,7 @@ import (
 	"terkins/env"
 )
 
-var CmdEncrypted = goter.Command{Cmd: &cobra.Command{
+var CmdEncrypted = root.NewSubCommand(&cobra.Command{
 	Use:   "encrypt",
 	Short: "使用内置的加密方法加密用户密码",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -26,4 +26,4 @@ var CmdEncrypted = goter.Command{Cmd: &cobra.Command{
 			fmt.Printf("系统参数配置了%s的加密密码，但与刚输入的密码不匹配，请检查\n", env.User.Value)
 		}
 	},
-}}
+}, &env.Pass, &env.User)

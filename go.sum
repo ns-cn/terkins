@@ -18,6 +18,8 @@ github.com/ns-cn/goter v0.0.0-20221229034825-cb62812d785c h1:7F0of6l7oGlLFexTE+9
 github.com/ns-cn/goter v0.0.0-20221229034825-cb62812d785c/go.mod h1:fDFsTqtJ2cGytfXzDhZPn9ug/PM1ZwJsNEi5zIFNpzc=
 github.com/ns-cn/goter v0.0.0-20221229051959-8c0145ac012d h1:p8j9wS6oZOhY51G6VA6OtDbESA83Hhvd6Cl5VxvuXWU=
 github.com/ns-cn/goter v0.0.0-20221229051959-8c0145ac012d/go.mod h1:fDFsTqtJ2cGytfXzDhZPn9ug/PM1ZwJsNEi5zIFNpzc=
+github.com/ns-cn/goter v0.0.0-20230109084216-58e3fe195323 h1:EGqlSkHj3S+po7ynnehxivPOpOfQSEGLgJKbPPcWH4o=
+github.com/ns-cn/goter v0.0.0-20230109084216-58e3fe195323/go.mod h1:fDFsTqtJ2cGytfXzDhZPn9ug/PM1ZwJsNEi5zIFNpzc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=

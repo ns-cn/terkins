@@ -11,7 +11,7 @@ import (
 	"terkins/env"
 )
 
-var CmdJob = goter.Command{Cmd: &cobra.Command{
+var CmdJob = root.NewSubCommand(&cobra.Command{
 	Use:   "job",
 	Short: "查看当前用户的所有可用的构建任务",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -59,4 +59,4 @@ var CmdJob = goter.Command{Cmd: &cobra.Command{
 			fmt.Println(result)
 		}
 	},
-}}
+}, &env.Host, &env.User, &env.Pass, &env.Encrypt, &env.Debug)

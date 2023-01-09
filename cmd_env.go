@@ -3,13 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/liushuochen/gotable"
-	"github.com/ns-cn/goter"
 	"github.com/spf13/cobra"
 	"os"
 	"terkins/env"
 )
 
-var CmdEnv = goter.Command{Cmd: &cobra.Command{
+var CmdEnv = root.NewSubCommand(&cobra.Command{
 	Use:   "env",
 	Short: "查看当前已配置的变量（含命令行参数）",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -28,4 +27,4 @@ var CmdEnv = goter.Command{Cmd: &cobra.Command{
 		fmt.Print(table)
 		fmt.Println("值的取值顺序：命令行参数 > 系统环境变量 > 默认值")
 	},
-}}
+}, &env.Host, &env.User, &env.Pass, &env.Encrypt)
